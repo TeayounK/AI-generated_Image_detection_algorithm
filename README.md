@@ -1,0 +1,1 @@
+# AI-generated_Image_detection_algorithm
