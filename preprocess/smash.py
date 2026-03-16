@@ -54,7 +54,5 @@ def smash(img: Image.Image, patch_size: int = 32, num_patches: int = 192, divers
 
     rich_patches = patches[rich_indices]
     poor_patches = patches[poor_indices]
-    # this gives us 2/3 of the patches excluding the middle 1/3.
-    # perhaps we want to explore the results to get a better sense of the fraction of patches to select. 
-    # For example, we could visualize the diversity scores and see if there is a natural cutoff point that separates rich and poor textures.
+    
     return rich_patches, poor_patches
