@@ -22,4 +22,4 @@ def reconstruct(patches: torch.Tensor, collage_size: int = 256) -> torch.Tensor:
     # Permute to [C, G*P, G*P]
     collage = patches.permute(2, 0, 3, 1, 4).contiguous().view(patches.shape[2], grid_size * patch_size, grid_size * patch_size)
     # Optionally, we could resize the collage to the target collage_size if needed.
-    return collage
+    return collage.permute(1, 2, 0).numpy()

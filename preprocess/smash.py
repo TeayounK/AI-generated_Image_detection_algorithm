@@ -49,6 +49,9 @@ def smash(img: Image.Image, patch_size: int = 32, num_patches: int = 192, divers
     num_rich = int(num_patches * diversity_threshold)
     num_poor = int(num_patches * diversity_threshold)
 
+    num_rich += 1 if num_rich % 2 == 1 else 0
+    num_poor += 1 if num_poor % 2 == 1 else 0
+
     rich_indices = sorted_indices[:num_rich]
     poor_indices = sorted_indices[-num_poor:]
 
