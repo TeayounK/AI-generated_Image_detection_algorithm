@@ -1,13 +1,15 @@
 from typing import Tuple
+from matplotlib import transforms
 import torch
 from PIL import Image
+import numpy as np
 
 def smash(img: Image.Image, patch_size: int = 32, num_patches: int = 192, diversity_threshold: float = 0.33) -> Tuple[torch.Tensor, torch.Tensor]:
-    
+
     """
     Extracts patches from the image, computes texture diversity scores, sorts them,
     and returns the top (rich) and bottom (poor) patches based on the threshold.
-    
+
     Args:
         img: Input PIL image.
         patch_size: Size of each square patch (e.g., 32x32).
@@ -19,5 +21,42 @@ def smash(img: Image.Image, patch_size: int = 32, num_patches: int = 192, divers
         poor_patches: Tensor of poor texture patches [K, C, patch_size, patch_size].
     """
 
-    # TODO: Implement patch extraction (e.g., unfold), diversity calculation (abs diffs in 4 directions), sort, select.
-    pass
+    # Choose random coordinates for patch extraction
+    corrodinate_x = torch.randint(0, img.width - patch_size, (num_patches,))
+    corrodinate_y = torch.randint(0, img.height - patch_size, (num_patches,))
+    patches = []
+    for x, y in zip(corrodinate_x, corrodinate_y):
+        # smash the patch by cropping the image at the specified coordinates
+        patch = img.crop((x.item(), y.item(), x.item() + patch_size, y.item() + patch_size))
+        patches.append(transforms.ToTensor()(patch))
+    patches = torch.stack(patches)  # [num_patches, C, patch_size, patch_size]
+
+    # calculate texture diversity scores for each patch
+    diversity_scores = torch.zeros(num_patches)
+    # CONCERN: the paper said to add each difference to the score, but it seems more intuitive to average them.
+    # we can do .sum(dim=[1,2,3]) instead of .mean(), but then it would be more sensitive to patch size and number of channels.
+    # so, averaging makes it more sense to me to get the average difference for each pixcel.
+    metric1 = torch.abs(patches[:, :, 1:, :] - patches[:, :, :-1, :]).mean(dim=[1, 2, 3])  # vertical
+    metric2 = torch.abs(patches[:, :, :, 1:] - patches[:, :, :, :-1]).mean(dim=[1, 2, 3])  # horizontal
+    metric3 = torch.abs(patches[:, :, 1:, 1:] - patches[:, :, :-1, :-1]).mean(dim=[1, 2, 3])  # diagonal
+    metric4 = torch.abs(patches[:, :, 1:, :-1] - patches[:, :, :-1, 1:]).mean(dim=[1, 2, 3])  # anti-diagonal
+    diversity_scores = metric1 + metric2 + metric3 + metric4
+    diversity_scores /= 4  #OPTIONAL: average the scores from all directions
+
+    # sort patches by diversity scores
+    _, sorted_indices = torch.sort(diversity_scores, descending=True)
+
+    # select top and bottom patches based on the threshold
+    num_rich = int(num_patches * diversity_threshold)
+    num_poor = int(num_patches * diversity_threshold)
+
+    num_rich += 1 if num_rich % 2 == 1 else 0
+    num_poor += 1 if num_poor % 2 == 1 else 0
+    
+    rich_indices = sorted_indices[:num_rich]
+    poor_indices = sorted_indices[-num_poor:]
+
+    rich_patches = patches[rich_indices]
+    poor_patches = patches[poor_indices]
+
+    return rich_patches, poor_patches
