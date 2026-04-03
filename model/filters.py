@@ -10,6 +10,7 @@ class SRMFilters(nn.Module):
         # Define the 30 kernels as tensors (from classes like 1st/2nd/3rd order, square, edge).
         
         kernels = [
+            # a
             torch.tensor([
                 [0, 0, 0, 0, 0],
                 [0, 0, 1, 0, 0],
@@ -17,6 +18,56 @@ class SRMFilters(nn.Module):
                 [0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0]
             ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0],
+                [0, 0, -1, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, -1, 1, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, -1, 0, 0],
+                [0, 0, 0, 1, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, -1, 0, 0],
+                [0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, -1, 0, 0],
+                [0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 1, -1, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 1, 0, 0, 0],
+                [0, 0, -1, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            # b
             torch.tensor([
                 [0, 0, -1, 0, 0],
                 [0, 0, 3, 0, 0],
@@ -24,6 +75,56 @@ class SRMFilters(nn.Module):
                 [0, 0, 1, 0, 0],
                 [0, 0, 0, 0, 0]
             ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, -1],
+                [0, 0, 0, 3, 0],
+                [0, 0, -3, 0, 0],
+                [0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 1, -3, 3, -1],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 1, 0, 0, 0],
+                [0, 0, -3, 0, 0],
+                [0, 0, 0, 3, 0],
+                [0, 0, 0, 0, -1]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 1, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, -3, 0, 0],
+                [0, 0, 3, 0, 0],
+                [0, 0, -1, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 1],
+                [0, 0, 0, 0, 0],
+                [0, 0, -3, 0, 0],
+                [0, 3, 0, 0, 0],
+                [-1, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [-1, 3, -3, 0, 1],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [-1, 0, 0, 0, 0],
+                [0, 3, 0, 0, 0],
+                [0, 0, -3, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 1]
+            ], dtype=torch.float32),
+            # c
             torch.tensor([
                 [0, 0, 0, 0, 0],
                 [0, 0, 1, 0, 0],
@@ -33,11 +134,55 @@ class SRMFilters(nn.Module):
             ], dtype=torch.float32),
             torch.tensor([
                 [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 1, -2, 1, 0],
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 1, 0],
+                [0, 0, -2, 0, 0],
+                [0, 1, 0, 0, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 1, 0, 0, 0],
+                [0, 0, -2, 0, 0],
+                [0, 0, 0, 1, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            # d
+            torch.tensor([
+                [0, 0, 0, 0, 0],
                 [0, -1, 2, -1, 0],
                 [0, 2, -4, 2, 0],
                 [0, 0, 0, 0, 0],
                 [0, 0, 0, 0, 0]
             ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 0, 2, -1, 0],
+                [0, 0, -4, 2, 0],
+                [0, 0, 2, -1, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [0, 2, -4, 2, 0],
+                [0, -1, 2, -1, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, -1, 2, 0, 0],
+                [0, 2, -4, 0, 0],
+                [0, -1, 2, 0, 0],
+                [0, 0, 0, 0, 0]
+            ], dtype=torch.float32),
+            # e
             torch.tensor([
                 [-1, 2, -2, 2, -1],
                 [2, -6, 8, -6, 2],
@@ -46,12 +191,35 @@ class SRMFilters(nn.Module):
                 [0, 0, 0, 0, 0]
             ], dtype=torch.float32),
             torch.tensor([
+                [0, 0, -2, 2, -1],
+                [0, 0, 8, -6, 2],
+                [0, 0, -12, 8, -2],
+                [0, 0, 8, -6, 2],
+                [0, 0, -2, 2, -1]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [0, 0, 0, 0, 0],
+                [0, 0, 0, 0, 0],
+                [-2, 8, -12, 8, -2],
+                [2, -6, 8, -6, 2],
+                [-1, 2, -2, 2, -1]
+            ], dtype=torch.float32),
+            torch.tensor([
+                [-1, 2, -2, 0, 0],
+                [2, -6, 8, 0, 0],
+                [-2, 8, -12, 0, 0],
+                [2, -6, 8, 0, 0],
+                [-1, 2, -2, 0, 0]
+            ], dtype=torch.float32),
+            # f
+            torch.tensor([
                 [0, 0, 0, 0, 0],
                 [0, -1, 2, -1, 0],
                 [0, 2, -4, 2, 0],
                 [0, -1, 2, -1, 0],
                 [0, 0, 0, 0, 0]
             ], dtype=torch.float32),
+            # g
             torch.tensor([
                 [-1, 2, -2, 2, -1],
                 [2, -6, 8, -6, 2],
@@ -61,8 +229,8 @@ class SRMFilters(nn.Module):
             ], dtype=torch.float32),
         ]
 
-        kernels = torch.stack(kernels)   # [7, 5, 5]
-        kernels = kernels.unsqueeze(1)   # [7, 1, 5, 5]
+        kernels = torch.stack(kernels)   # [30, 5, 5]
+        kernels = kernels.unsqueeze(1)   # [30, 1, 5, 5]
         self.register_buffer('kernels', kernels)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
@@ -73,7 +241,7 @@ class SRMFilters(nn.Module):
             x: Input tensor [B, C, H, W] (e.g., grayscale or RGB; convert if needed).
 
         Returns:
-            residuals: Filtered residuals [B, 7, H, W].
+            residuals: Filtered residuals [B, 30, H, W].
         """
         # Convert to grayscale if RGB
         if x.shape[1] == 3:
